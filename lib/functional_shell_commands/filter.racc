@@ -1,0 +1,91 @@
+class Filter
+ token LBRACKET
+ token RBRACKET
+ token LPAREN
+ token RPAREN 
+ token COMMA
+ token NUMBER
+ token STRING
+ token ARROWOP
+ token IDENT
+ token SLASH
+ token PLUS
+ token ASTERISK
+		 
+ prechigh
+   nonassoc UMINUS
+   left '*' '/'
+   left '+' '-'
+ preclow
+
+rule
+  program: stmt
+
+  stmt: funcall 
+
+  funcall: higher_order_function function args { result = do_higher_order_funcall( val[0], val[1], val[2]) }
+         | higher_order_function function accumulator args { result = do_higher_order_funcall( val[0], val[1], val[2], val[3] )}
+
+  accumulator:  NUMBER
+             |  STRING
+  args: array 
+
+  higher_order_function: IDENT
+
+  function: IDENT
+          | LPAREN PLUS NUMBER RPAREN  { result = [val[1], val[2]] } 
+		  | LPAREN '++' STRING RPAREN  { resut = val[1] } 
+		  | LPAREN '-' NUMBER RPAREN 
+		  | LPAREN ASTERISK NUMBER RPAREN { result = [val[1], val[2]] } 
+ 		  | LPAREN '/' NUMBER RPAREN
+		  | LPAREN PLUS RPAREN { result = val[1] }
+		  | LPAREN '>' NUMBER RPAREN { result = val[1], val[2] }
+		  | LPAREN '<' NUMBER RPAREN { result = val[1], val[2] }
+	
+		  		
+  array: LBRACKET elements RBRACKET { result =  val[1]  }
+  
+  elements: NUMBER          { result = [val[0]] }
+          | STRING           { result = [val[0]] }
+          | elements COMMA NUMBER { result = val[0] + [val[2]] }
+          | elements COMMA STRING { result = val[0] + [val[2]] }
+  
+  exp: exp '+' exp { result += val[2] }
+     | exp '-' exp { result -= val[2] }
+     | exp '*' exp { result *= val[2] }
+     | exp '/' exp { result /= val[2] }
+     | '(' exp ')' { result = val[1] }
+     | '-' NUMBER  =UMINUS { result = -val[1] }
+     | NUMBER
+end
+
+---- inner
+require "../lib/functional_shell_commands/lex.rb"
+include Lex
+
+  def do_higher_order_funcall(higher_order_func, predicate_func, collection)
+    collection.public_send(higher_order_func) do |item|
+	   item.public_send(mapping(predicate_func))
+    end
+  end
+
+  def mapping(predicate_func)
+	case predicate_func
+	when "even" then
+      "even?"
+	else
+	  raise "#{predicate_func} is not expected as prediate functions"
+	end			
+  end 													
+										
+---- footer
+parser = Filter.new								   
+ARGV.unshift("select")
+pipe_input = $stdin.read.strip.split(" ").map(&:to_i).to_s
+str = ARGV.join(" ") + pipe_input
+show_result = parser.parse(str)
+puts show_result.join(",")
+
+
+
+
