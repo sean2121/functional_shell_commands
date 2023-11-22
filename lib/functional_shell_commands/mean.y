@@ -5,7 +5,7 @@ rule
 end
 
 ---- inner
-require "../lib/functional_shell_commands/lex.rb"
+require "functional_shell_commands/lex.rb"
 include Lex
 
   def do_funcall(list)	
@@ -13,7 +13,7 @@ include Lex
   end 	 
 										
 ---- footer
-require "./options.rb"
+require "functional_shell_commands/options.rb"
 include Options
 
 args_check(0)	 

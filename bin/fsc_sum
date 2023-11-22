@@ -9,7 +9,7 @@ require 'racc/parser.rb'
 class Sum < Racc::Parser
 
 module_eval(<<'...end sum.racc/module_eval...', 'sum.racc', 48)
-require "../lib/functional_shell_commands/lex.rb"
+require "functional_shell_commands/lex.rb"
 include Lex
 
   def do_funcall(list)
@@ -230,7 +230,7 @@ end
 
 end   # class Sum
 
-require "./options.rb"
+require "functional_shell_commands/options.rb"
 include Options	 
 	 
 args_check(0)

@@ -9,7 +9,7 @@ require 'racc/parser.rb'
 class Mean < Racc::Parser
 
 module_eval(<<'...end mean.racc/module_eval...', 'mean.racc', 48)
-require "../lib/functional_shell_commands/lex.rb"
+require "functional_shell_commands/lex.rb"
 include Lex
 
   def do_funcall(list)	
@@ -230,7 +230,7 @@ end
 
 end   # class Mean
 
-require "./options.rb"
+require "functional_shell_commands/options.rb"
 include Options
 
 args_check(0)	 

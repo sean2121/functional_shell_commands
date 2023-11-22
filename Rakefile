@@ -3,7 +3,6 @@
 
 require "bundler/gem_tasks"
 require "rake/testtask"
-require 'pry'
 
 
 LIB_PATH = "./lib/functional_shell_commands"
@@ -19,6 +18,7 @@ task :generate do
   preprocess
   create_files
   add_shebang
+  add_permission
 end
   
 def preprocess
@@ -32,8 +32,6 @@ def preprocess
     end
     # .racc files is the intermediate file that should be compiled by racc.
     target_file_name = file.gsub(".y", ".racc")
-    puts target_file_name
-    puts text 
     File.write(target_file_name, text)
   end
 end
@@ -56,5 +54,11 @@ def add_shebang
       file.puts "#!/usr/bin/env ruby"
       file.puts original_content       
     end
+  end
+end
+  
+def add_permission
+  Dir.glob("./bin/*") do |file|
+    sh "chmod +x #{file}"
   end
 end

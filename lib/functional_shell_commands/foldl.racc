@@ -60,7 +60,7 @@ rule
 end
 
 ---- inner
-require "../lib/functional_shell_commands/lex.rb"
+require "functional_shell_commands/lex.rb"
 include Lex
 
   def do_higher_order_funcall(higher_order_func, predicate_func, accumulator, list)
