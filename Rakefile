@@ -19,6 +19,7 @@ task :generate do
   create_files
   add_shebang
   add_permission
+  clearn_up
 end
   
 def preprocess
