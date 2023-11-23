@@ -19,7 +19,7 @@ task :generate do
   create_files
   add_shebang
   add_permission
-  clearn_up
+  clean_up
 end
   
 def preprocess
@@ -61,5 +61,11 @@ end
 def add_permission
   Dir.glob("./bin/*") do |file|
     sh "chmod +x #{file}"
+  end
+end
+
+def clean_up
+  Dir.glob("#{LIB_PATH}/*.racc") do |file|
+    File.delete(file)
   end
 end
