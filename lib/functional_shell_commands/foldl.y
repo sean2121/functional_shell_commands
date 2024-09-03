@@ -10,7 +10,9 @@ include Lex
 
   def do_higher_order_funcall(higher_order_func, predicate_func, accumulator, list)
     list.public_send(*[higher_order_func, accumulator]){|acc, element| acc.send(*[predicate_func,element])}
-  end 													
+  end 			
+
+test
 										
 ---- footer
 
